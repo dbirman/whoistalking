@@ -1,8 +1,8 @@
 {
-  "name": "Papers",
-  "description": "Papers memory app",
-  "repository": "https://github.com/dbirman/leitner",
+  "name": "Who is talking?",
+  "description": "Who talks app",
+  "repository": "https://github.com/dbirman/whotalks",
   // "logo": "https://cdn.rawgit.com/heroku/node-js-getting-started/master/public/node.svg",
-  "keywords": ["leitner","papers"],
+  "keywords": ["academia","gender"],
   // "image": "heroku/nodejs"
 }
