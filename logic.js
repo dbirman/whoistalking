@@ -1,10 +1,56 @@
-const socket = io();
+// const socket = io();
 
 let info = {};
+info.number = parseInt(document.getElementById('number').value);
 
-function goDemo() {
-	// save the talk type
-	info.type = document.getElementById('talk-type').value;
+function saveData(el) {
+	info[el.id] = el.value;
+	if (!el.changed && el.nodeName=="SELECT") {
+		el.changed = true;
+		el.remove(0);
+	}
+	if (el.id=="number") {
+		val = parseInt(el.value);
+		slider.noUiSlider.updateOptions({
+			range:{
+				'min':0,
+				'max':val
+			}
+		});
+	}
+}
+
+var slider = document.getElementById('range');
+
+noUiSlider.create(slider, {
+  start: [2, 5, 8],
+  connect: true,
+  step:1,
+  range: {
+      'min': 0,
+      'max': 10
+  }
+});
+
+var connect = slider.querySelectorAll('.noUi-connect');
+var classes = ['c-1-color', 'c-2-color', 'c-3-color', 'c-4-color', 'c-5-color'];
+
+for (var i = 0; i < connect.length; i++) {
+    connect[i].classList.add(classes[i]);
+}
+
+slider.noUiSlider.on('update',updateNumbers)
+
+function updateNumbers() {
+	values = slider.noUiSlider.get();
+	console.log(values);
+	info.faculty = parseInt(values[0]);
+	info.pd = parseInt(values[1])-info.faculty;
+	info.grad = parseInt(values[2])-info.faculty-info.pd;
+	info.other = info.number-parseInt(values[2]);
+	document.getElementById('faculty').innerHTML = info.faculty;
+	document.getElementById('postdoc').innerHTML = info.pd;
+	document.getElementById('grad').innerHTML = info.grad;
 }
 
 
