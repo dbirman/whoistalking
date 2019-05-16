@@ -1,6 +1,11 @@
 const socket = io();
 
+let info = {};
 
+function goDemo() {
+	// save the talk type
+	info.type = document.getElementById('talk-type').value;
+}
 
 
 // function processForm() {

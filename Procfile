@@ -1,1 +1,1 @@
-web: node leitner.js
+web: node server.js

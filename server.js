@@ -52,6 +52,7 @@ function init() {
 let mtgSchema = new mongoose.Schema({
   id: String, // a unique identifier (date + some info)
   location: String,
+  type: String,
   number: Number, // how many people
   perc_faculty: Number, // how many faculty
   perc_pd: Number, // postdocs
@@ -63,9 +64,9 @@ let mtgSchema = new mongoose.Schema({
   talkGender: Array, // 1 = female, 2 = male, 3 = nonbinary, 4 = 
 });
 
-paperSchema.methods.titleString = function() {
+mtgSchema.methods.titleString = function() {
   let str = '';
-  
+
   return str;
 }
 
