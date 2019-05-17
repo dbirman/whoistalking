@@ -28,25 +28,25 @@ io.on('connection', function(socket){
 
 function init() {
   slog('Database startup');
-  if (process.env.MONGODB_URI) {
-    mongoose.connect(process.env.MONGODB_URI);
-  } else {
-    mongoose.connect(MONGODB_URI);
-  }
-  let db = mongoose.connection;
+  // if (process.env.MONGODB_URI) {
+  //   mongoose.connect(process.env.MONGODB_URI);
+  // } else {
+  //   mongoose.connect(MONGODB_URI);
+  // }
+  // let db = mongoose.connection;
 
-  db.on('error', console.error.bind(console, 'connection error:'));
-  db.once('open', function() {
-    slog('Connection to database established');
+  // db.on('error', console.error.bind(console, 'connection error:'));
+  // db.once('open', function() {
+  //   slog('Connection to database established');
 
-    slog('Listing meetings in database');
-    Paper.find(function(err,papers) {
-      for (pi in papers) {
-        console.log(papers[pi].titleString());
-      }
-    });
+  //   slog('Listing meetings in database');
+  //   Paper.find(function(err,papers) {
+  //     for (pi in papers) {
+  //       console.log(papers[pi].titleString());
+  //     }
+  //   });
 
-  });
+  // });
 }
 
 let mtgSchema = new mongoose.Schema({
@@ -59,6 +59,8 @@ let mtgSchema = new mongoose.Schema({
   perc_grad: Number, // grad students
   speakerType: Number, // 1/2/3/4
   speakerGender: String, // see below
+  speakerRace: String,
+  speakerAge: String,
   timestamps: Array, // timestamp of events
   talkCode: Array, // 1 = faculty, 2 = postdoc, 3 = grad student, 4 = other
   talkGender: Array, // 1 = female, 2 = male, 3 = nonbinary, 4 = 
@@ -73,8 +75,9 @@ mtgSchema.methods.titleString = function() {
 let Meeting = mongoose.model('Meeting',mtgSchema);
 
 function addData(info) {  
-  let mtg = new Meeting(info);
-  mtg.save();
+  console.log(info);
+  // let mtg = new Meeting(info);
+  // mtg.save();
 }
 
 function slog(msg) {

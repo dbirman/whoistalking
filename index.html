@@ -113,13 +113,66 @@
   .c-3-color { background: green; }
   .c-4-color { background: blue; }
   .c-5-color { background: purple; }
+
+  .block {
+    width:100vw;
+    text-align:center;
+    font-size:2vw;
+    position:relative;
+  }
+
+  /*when picking a block element, it is centered and takes up the whole screen*/
+  .block-center {
+    height:100vh;
+  }
+
+  .block-future {
+    height:10vh;
+    opacity:0.1;
+  }
+  .block-future-big {
+    height:50vh;
+    opacity:0.1;
+  }
+
+  .block-past {
+    height:10vh;
+    opacity:0.1;
+  }
+
+  .text-vcenter {
+    transform:(0,+50%);
+  }
+
+  .butt {
+    width:5vw;
+    height:5vh;
+    border: 1px;
+    color: white;
+    padding: 5vw 5vw;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 2vw;
+  }
+  .butt-active {
+    background-color: #4CAF50;
+  }
+  .butt-inactive {
+    background-color: #000000;
+  }
+
+  .box {
+    width:10vw;
+    height:10vh;
+  }
   </style>
 
 <body>
 
-<div id="chooser-talk" class="center">
-  <h1 style="font-size:5vw" >I am attending a 
-    <select id="type" onchange="saveData(this);">
+<div id="chooser-talk" class="block block-center">
+  <h1 class="text-vcenter" >I am attending a 
+    <select id="type" onchange="saveData(this,'chooser-talk','chooser-demo');">
       <option value="">...</option>
       <option value="talk">Talk</option>
       <option value="meeting">Meeting</option>
@@ -128,9 +181,9 @@
   </h1>
 </div>
 
-<div id="chooser-demo" class="center">
-  <h1 style="font-size:5vw">The speaker is
-    <select id="speakerGender" removeable="true" onchange="saveData(this);">
+<div id="chooser-demo" class="block block-future">
+  <h1>The speaker is
+    <select id="speakerGender" removeable="true" onchange="saveData(this,'chooser-demo','chooser-race');">
       <option value="">...</option>
       <option value="male">Male</option>
       <option value="female">Female</option>
@@ -140,16 +193,71 @@
   </h1>
 </div>
 
-<div id="chooser-perc" class="center">
-  <h1 style="font-size: 5vw">There are <input style="font-size:4vw;width:10vw" type="number" id="number" onchange="saveData(this);" value="10" removeable="false"> people here</h1> 
+<div id="chooser-race" class="block block-future">
+  <h1>The speaker is
+    <select id="speakerRace" removeable="true" onchange="saveData(this,'chooser-race','chooser-age');">
+      <option value="">...</option>
+      <option value="white">White</option>
+      <option value="asian">Asian</option>
+      <option value="black">African American</option>
+      <option value="latinx">Hispanic/Latinx</option>
+    </select>
+  </h1>
+</div>
+
+<div id="chooser-age" class="block block-future">
+  <h1>The speaker is a
+    <select id="speakerAge" removeable="true" onchange="saveData(this,'chooser-age','chooser-perc');">
+      <option value="">...</option>
+      <option value="prof">Professor</option>
+      <option value="pd">Postdoc</option>
+      <option value="grad">Grad student</option>
+      <option value="ugrad">Undergrad</option>
+      <option value="nospec">No specific person</option>
+    </select>
+  </h1>
+</div>
+
+<div id="chooser-perc" class="block block-future-big">
+  <h1 style="font-size: 5vw">There are <input style="font-size:4vw;width:10vw" type="number" id="number" onchange="changeNumber(this);" value="10" removeable="false"> people here</h1> 
 
   <h1 style="font-size:5vw">
     <span id="faculty">0</span> Faculty
     <span id="postdoc">0</span> Postdocs
     <span id="grad">0</span> Students
   </h1>
-  <div id="range">
-  </div>
+  <div id="range"></div>
+  <br>
+  <br>
+  <a class="butt butt-active" onclick="start();">The talk is starting</a>
+</div>
+
+<hr>
+
+<div id="events" class="block block-future-big">
+  <h1 style="font-size: 5vw">The person talking is <span id="whoistalking">...</span></h1>
+  <table>
+    <tr>
+      <th class="box"></th>
+      <th class="box"><a id="b1" class="butt butt-inactive" onclick="switchGroup(0);">1: Faculty</a></th>
+      <th class="box"><a id="b2" class="butt butt-inactive" onclick="switchGroup(1);">2: Postdoc</a></th>
+      <th class="box"><a id="b3" class="butt butt-inactive" onclick="switchGroup(2);">3: Grad student</a></th>
+      <th class="box"></th>
+      <th class="box"></th>
+      <th class="box"><a id="bu" class="butt butt-inactive" onclick="switchTalk(-1);">Speaker</a></th>
+      <th class="box"></th>
+    </tr>
+    <tr>
+      <th class="box"></th>
+      <th class="box"></th>
+      <th class="box"></th>
+      <th class="box"></th>
+      <th class="box"></th>
+      <th class="box"><a id="bl" class="butt butt-inactive" onclick="switchTalk(1);">Male</a></th>
+      <th class="box"><a id="bd" class="butt butt-inactive" onclick="switchTalk(0);">Nobody</a></th>
+      <th class="box"><a id="br" class="butt butt-inactive" onclick="switchTalk(2);">Female</a></th>
+    </tr>
+  </table>
 </div>
 
 <script src="./socket.io/socket.io.js"></script>

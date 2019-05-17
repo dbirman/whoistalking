@@ -1,9 +1,18 @@
-// const socket = io();
+const socket = io();
 
 let info = {};
 info.number = parseInt(document.getElementById('number').value);
 
-function saveData(el) {
+function sendData() {
+	info.timestamps = timestamps;
+	info.groups = groups;
+	info.talking = talking;
+
+	socket.emit('data',info);
+	// send information to the server, which will over-write whatever is currently saved on the server
+}
+
+function saveData(el,parent_id,next_id) {
 	info[el.id] = el.value;
 	if (!el.changed && el.nodeName=="SELECT") {
 		el.changed = true;
@@ -18,6 +27,16 @@ function saveData(el) {
 			}
 		});
 	}
+	// if this has a parent element with class block-future, change to block-past
+	document.getElementById(parent_id).classList.remove('block-center')
+	document.getElementById(parent_id).classList.add('block-past')
+	document.getElementById(next_id).classList.remove('block-future')
+	document.getElementById(next_id).classList.remove('block-future-big')
+	document.getElementById(next_id).classList.add('block-center')
+}
+
+function start() {
+	saveData(document.getElementById('number'),'chooser-perc','events');
 }
 
 var slider = document.getElementById('range');
@@ -43,7 +62,6 @@ slider.noUiSlider.on('update',updateNumbers)
 
 function updateNumbers() {
 	values = slider.noUiSlider.get();
-	console.log(values);
 	info.faculty = parseInt(values[0]);
 	info.pd = parseInt(values[1])-info.faculty;
 	info.grad = parseInt(values[2])-info.faculty-info.pd;
@@ -53,6 +71,91 @@ function updateNumbers() {
 	document.getElementById('grad').innerHTML = info.grad;
 }
 
+let timestamps = [];
+let groups = [];
+let talking = [];
+
+function event() {
+	// timestamp
+	timestamps.push(Date.now());
+
+	// add group
+	groups.push(cGroup);
+
+	// add who is talking
+	talking.push(cTalk);
+
+	setColors();
+	sendData();
+}
+
+let cGroup;
+let groupNames = ['Professor','Postdoc','Student'];
+function switchGroup(val) {
+	cGroup = val;
+	event();
+}
+
+let cTalk;
+let talkNames = ['Nobody','Male','Female','Non-binary'];
+function switchTalk(val) {
+	cTalk = val;
+	event();
+}
+
+let cRace;
+let raceNames = ['White','Asian','African American','Hispanic/Latino','Other']
+
+function setColors() {
+	var el = document.getElementById('whoistalking');
+	if (cTalk==0) {
+		el.innerHTML = talkNames[cTalk];
+	} else if (cTalk==-1) {
+		// this is the speaker
+		el.innerHTML = 'the speaker';
+	} else {
+		el.innerHTML = talkNames[cTalk] + ' ' + groupNames[cGroup];
+	}
+}
+
+// add event listeners
+window.addEventListener('keydown',keyEvent);
+
+function keyEvent(event) {
+	if (any(event.keyCode,[37,38,39,40,49,50,51])) {
+		event.preventDefault();
+	}
+	switch (event.keyCode) {
+		case 37:
+			document.getElementById('bl').click();
+			break;
+		case 38:
+			document.getElementById('bu').click();
+			break;
+		case 39:
+			document.getElementById('br').click();
+			break;
+		case 40:
+			document.getElementById('bd').click();
+			break;
+		case 49:
+			document.getElementById('b1').click();
+			break;
+		case 50:
+			document.getElementById('b2').click();
+			break;
+		case 51:
+			document.getElementById('b3').click();
+			break;
+	}
+}
+
+function any(val,array) {
+	for (var ai=0;ai<array.length;ai++) {
+		if (val==array[ai]) {return true;}
+	}
+	return false;
+}
 
 // function processForm() {
 // 	let code = document.getElementById("pass").value;
